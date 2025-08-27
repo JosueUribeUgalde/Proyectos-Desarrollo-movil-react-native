@@ -5,10 +5,10 @@ export default function App() {
 const [gasto, setgasto] = useState('');
 const [monto, setmonto] = useState('');
 
-// Cambiado: total como número
+
 const [total, settotal] = useState(0);
-// Cambiado: lista como array (antes era objeto y causaba TypeError al usar spread)
 const [lista, setlista] = useState([]);
+
 
 function agregarGasto(gasto, monto){
   const parsed = parseFloat(monto);
@@ -18,6 +18,15 @@ function agregarGasto(gasto, monto){
   setgasto('');
   setmonto('');
 };
+
+function eliminarGasto(index) {
+  setlista(prev => {
+    const eliminado = prev[index];
+    const nuevaLista = prev.filter((_, i) => i !== index);
+    settotal(t => t - (eliminado ? eliminado.monto : 0));
+    return nuevaLista;
+  });
+}
 
 
   return (
@@ -40,6 +49,15 @@ function agregarGasto(gasto, monto){
       <TouchableOpacity style={styles.button} onPress={() => agregarGasto(gasto, monto)}>
         <Text style={styles.buttonText}>agregar el gasto</Text>
       </TouchableOpacity>
+      <Text style={styles.title}>Lista de gastos:</Text>
+      {lista.map((item, index) => (
+  <View style={styles.contGast} key={index}>
+    <Text style={styles.gasto}>{item.gasto}: <Text style={styles.monto}>{item.monto}</Text></Text>
+    <TouchableOpacity style={styles.buttonDelete} onPress={() => eliminarGasto(index)}>
+      <Text style={styles.buttonText}>Eliminar</Text>
+    </TouchableOpacity>
+  </View>
+))}
       {/* Corregido: eliminado el punto después de total */}
       <Text style={styles.title}>Total de gastos: {total}</Text>
     </View>
@@ -79,5 +97,29 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  gasto: {
+    fontWeight: 'bold',
+  },
+  textList: {
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+  contGast: {
+    backgroundColor: '#f0f0f0',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 10,
+    width: '80%',
+    height: 80,
+    marginVertical: 10,
+  },
+  buttonDelete: {
+    backgroundColor: '#ff0000',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: '40%',
+    height: 40,
   },
 });
