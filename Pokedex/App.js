@@ -1,16 +1,44 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity,Image} from 'react-native';
 
 export default function App() {
+const [name, setName] = useState('');
+const [type, setType] = useState('');
+const [url, setUrl] = useState('');
+
+const [contPokemonAtrapado, setContPokemonAtrapado] = useState(0);
+
+const [listPokemon, setListPokemon] = useState([]);
+
+const handlerAgregarPokemon = (name, type, url) => {
+  const newPokemon = { name, type, url };
+  setListPokemon([...listPokemon, newPokemon]);
+  setName('');
+  setType('');
+  setUrl('');
+};
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.textTitle}>Pokédex</Text>
     <View style={styles.containerInputs}>
-      <TextInput style={styles.textImput} placeholder="Ingresa el nombre del pokemon" />
-      <TextInput style={styles.textImput} placeholder="Ingresa el tipo del pokemon" />
-      <TextInput style={styles.textImput} placeholder="Ingresa la url del pokemon" />
-      <TouchableOpacity style={styles.button}>
+      <TextInput style={styles.textImput} placeholder="Ingresa el nombre del pokemon" value={name} onChangeText={setName} />
+      <TextInput style={styles.textImput} placeholder="Ingresa el tipo del pokemon" value={type} onChangeText={setType} />
+      <TextInput style={styles.textImput} placeholder="Ingresa la url del pokemon" value={url} onChangeText={setUrl} />
+      <TouchableOpacity style={styles.button} onPress={() => handlerAgregarPokemon(name, type, url)}>
         <Text style={styles.buttonText}>Agregar Pokemon</Text>
       </TouchableOpacity>
+    </View>
+    {/* Mostrar la lista de pokemones */}
+    <View style={styles.containerList}>
+      {listPokemon.map((pokemon, index) => (
+        <View key={index} style={styles.card}>
+          <Text>Nombre: {pokemon.name}</Text>
+          <Text>Tipo: {pokemon.type}</Text>
+          <Image source={{ uri: pokemon.url }} style={{ width: 100, height: 100 }} />
+        </View>
+      ))}
     </View>
     </View>
   );
@@ -51,5 +79,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  containerList: {
+    marginTop: 30,
+    width: '80%',
+  },
+  card: {
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
   },
 });
