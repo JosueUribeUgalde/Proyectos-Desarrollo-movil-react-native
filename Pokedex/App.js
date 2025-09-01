@@ -1,46 +1,71 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity,Image} from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 
 export default function App() {
-const [name, setName] = useState('');
-const [type, setType] = useState('');
-const [url, setUrl] = useState('');
+  const [name, setName] = useState('');
+  const [type, setType] = useState('');
+  const [url, setUrl] = useState('');
+  const [caughtPokemon, setCaughtPokemon] = useState({}); // Agregar este estado
+  const [caughtCount, setCaughtCount] = useState(0);
 
-const [contPokemonAtrapado, setContPokemonAtrapado] = useState(0);
+  const [contPokemonAtrapado, setContPokemonAtrapado] = useState(0);
 
-const [listPokemon, setListPokemon] = useState([]);
+  const [listPokemon, setListPokemon] = useState([]);
 
-const handlerAgregarPokemon = (name, type, url) => {
-  const newPokemon = { name, type, url };
-  setListPokemon([...listPokemon, newPokemon]);
-  setName('');
-  setType('');
-  setUrl('');
-};
+  const handlerAgregarPokemon = (name, type, url) => {
+    const newPokemon = { name, type, url };
+    setListPokemon([...listPokemon, newPokemon]);
+    setName('');
+    setType('');
+    setUrl('');
+  };
 
+  const handleCapture = (index) => {
+    setCaughtPokemon(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+    setContPokemonAtrapado(prev => caughtPokemon[index] ? prev - 1 : prev + 1);
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.textTitle}>Pokédex</Text>
-    <View style={styles.containerInputs}>
-      <TextInput style={styles.textImput} placeholder="Ingresa el nombre del pokemon" value={name} onChangeText={setName} />
-      <TextInput style={styles.textImput} placeholder="Ingresa el tipo del pokemon" value={type} onChangeText={setType} />
-      <TextInput style={styles.textImput} placeholder="Ingresa la url del pokemon" value={url} onChangeText={setUrl} />
-      <TouchableOpacity style={styles.button} onPress={() => handlerAgregarPokemon(name, type, url)}>
-        <Text style={styles.buttonText}>Agregar Pokemon</Text>
-      </TouchableOpacity>
-    </View>
-    {/* Mostrar la lista de pokemones */}
-    <View style={styles.containerList}>
-      {listPokemon.map((pokemon, index) => (
-        <View key={index} style={styles.card}>
-          <Text>Nombre: {pokemon.name}</Text>
-          <Text>Tipo: {pokemon.type}</Text>
-          <Image source={{ uri: pokemon.url }} style={{ width: 100, height: 100 }} />
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <View style={styles.container}>
+        <Text style={styles.textTitle}>Pokédex</Text>
+        <View style={styles.containerInputs}>
+          <TextInput style={styles.textImput} placeholder="Ingresa el nombre del pokemon" value={name} onChangeText={setName} />
+          <TextInput style={styles.textImput} placeholder="Ingresa el tipo del pokemon" value={type} onChangeText={setType} />
+          <TextInput style={styles.textImput} placeholder="Ingresa la url del pokemon" value={url} onChangeText={setUrl} />
+          <TouchableOpacity style={styles.button} onPress={() => handlerAgregarPokemon(name, type, url)}>
+            <Text style={styles.buttonText}>Agregar Pokemon</Text>
+          </TouchableOpacity>
         </View>
-      ))}
-    </View>
-    </View>
+        <Text style={styles.textCaptureValue}>Pokemones atrapados: {contPokemonAtrapado}</Text>
+        {/* Mostrar la lista de pokemones */}
+        <View style={styles.containerList}>
+          {listPokemon.map((pokemon, index) => (
+            <View key={index} style={styles.card}>
+              <View style={styles.cardAlingnElements}>
+                <Text style={caughtPokemon[index] ? styles.caughtText : null}>
+                  Nombre: {pokemon.name}
+                </Text>
+                <Text style={caughtPokemon[index] ? styles.caughtText : null}>
+                  Tipo: {pokemon.type}
+                </Text>
+              </View>
+              <Image source={{ uri: pokemon.url }} style={{ width: 60, height: 60, borderRadius: 10 }} />
+              <TouchableOpacity 
+                style={[styles.buttonCapture, caughtPokemon[index] ? styles.buttonCaught : null]} 
+                onPress={() => handleCapture(index)}>
+                <Text style={styles.textCapture}>
+                  {caughtPokemon[index] ? 'Atrapado' : 'Capturar'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -89,5 +114,40 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 30,
+    alignItems: 'center',
+  },
+  cardAlingnElements: {
+    marginBottom: 10,
+  },
+  buttonCapture: {
+    backgroundColor: '#000000ff',
+    padding: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  textCapture: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textCaptureValue: {
+    marginTop: 20,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  caughtText: {
+    color: 'green',
+    textDecorationLine: 'line-through',
+  },
+  buttonCaught: {
+    backgroundColor: 'green',
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
