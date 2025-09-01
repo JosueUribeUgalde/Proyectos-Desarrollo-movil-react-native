@@ -5,7 +5,7 @@ export default function App() {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [url, setUrl] = useState('');
-  const [caughtPokemon, setCaughtPokemon] = useState({}); // Agregar este estado
+  const [caughtPokemon, setCaughtPokemon] = useState({}); 
   const [caughtCount, setCaughtCount] = useState(0);
 
   const [contPokemonAtrapado, setContPokemonAtrapado] = useState(0);
@@ -15,6 +15,7 @@ export default function App() {
   const handlerAgregarPokemon = (name, type, url) => {
     const newPokemon = { name, type, url };
     setListPokemon([...listPokemon, newPokemon]);
+    setCaughtCount(caughtCount + 1);
     setName('');
     setType('');
     setUrl('');
@@ -41,21 +42,25 @@ export default function App() {
           </TouchableOpacity>
         </View>
         <Text style={styles.textCaptureValue}>Pokemones atrapados: {contPokemonAtrapado}</Text>
+        <Text style={styles.textCaptureValue}>Pokemones Totales: {caughtCount}</Text>
         {/* Mostrar la lista de pokemones */}
         <View style={styles.containerList}>
           {listPokemon.map((pokemon, index) => (
             <View key={index} style={styles.card}>
               <View style={styles.cardAlingnElements}>
-                <Text style={caughtPokemon[index] ? styles.caughtText : null}>
+                <Text style={caughtPokemon[index] ? styles.caughtText : styles.NotcaughtText}>
                   Nombre: {pokemon.name}
                 </Text>
-                <Text style={caughtPokemon[index] ? styles.caughtText : null}>
+                <Text style={caughtPokemon[index] ? styles.caughtText : styles.NotcaughtText}>
                   Tipo: {pokemon.type}
                 </Text>
               </View>
-              <Image source={{ uri: pokemon.url }} style={{ width: 60, height: 60, borderRadius: 10 }} />
-              <TouchableOpacity 
-                style={[styles.buttonCapture, caughtPokemon[index] ? styles.buttonCaught : null]} 
+              <Image 
+                source={{ uri: pokemon.url }} 
+                style={{ width: 60, height: 60, borderRadius: 10 }} 
+              />
+              <TouchableOpacity
+                style={[styles.buttonCapture, caughtPokemon[index] ? styles.buttonCaught : null]}
                 onPress={() => handleCapture(index)}>
                 <Text style={styles.textCapture}>
                   {caughtPokemon[index] ? 'Atrapado' : 'Capturar'}
@@ -75,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     paddingTop: 50,
-    height: '100%',
+    width: '100%',
   },
   textTitle: {
     fontSize: 30,
@@ -90,9 +95,9 @@ const styles = StyleSheet.create({
   },
   containerInputs: {
     marginTop: 20,
-    width: '80%',
     justifyContent: 'space-between',
-    height: '30%',
+    height: 250,
+    width: '85%',
   },
   button: {
     backgroundColor: '#000000ff',
@@ -107,7 +112,7 @@ const styles = StyleSheet.create({
   },
   containerList: {
     marginTop: 30,
-    width: '80%',
+    width: '90%',
   },
   card: {
     marginBottom: 10,
@@ -116,11 +121,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 30,
+    gap: 15,
     alignItems: 'center',
   },
   cardAlingnElements: {
-    marginBottom: 10,
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 10,
+    marginLeft: 10,
+    resizeMode: 'contain',
   },
   buttonCapture: {
     backgroundColor: '#000000ff',
@@ -133,6 +142,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  NotcaughtText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   textCaptureValue: {
     marginTop: 20,
     fontSize: 20,
@@ -140,6 +153,7 @@ const styles = StyleSheet.create({
   },
   caughtText: {
     color: 'green',
+    fontWeight: 'bold',
     textDecorationLine: 'line-through',
   },
   buttonCaught: {
@@ -147,7 +161,6 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+paddingBottom: 50,
   },
 });
