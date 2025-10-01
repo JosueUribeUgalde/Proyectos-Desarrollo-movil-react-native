@@ -13,7 +13,7 @@ export default function App() {
       Alert.alert('Error', 'Por favor completa todos los campos.');
       return;
     }
-    Alert.alert('Éxito', `Registro exitoso. ¡Bienvenido, ${nombre}!`);
+    Alert.alert('Éxito', `Registro exitoso. ¡Bienvenido, ${nombre}, ${correo}!`);
   };
 
   return (
