@@ -139,12 +139,12 @@ export default function App() {
     }
   };
 
-  // PUT - Actualizar post
+  //  Actualizar post
   const updatePost = async () => {
     try {
       setSyncing(true);
       
-      // Optimistic update
+     
       const updatedPosts = posts.map(p => 
         p.id === selectedPost.id ? { ...p, ...formData, synced: false } : p
       );
