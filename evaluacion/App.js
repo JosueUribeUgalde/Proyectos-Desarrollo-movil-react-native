@@ -95,7 +95,7 @@ export default function App() {
     try {
       setSyncing(true);
       
-      // Optimistic update
+      // es objeto tenporal para mostrar en la lista mientras se sincroniza
       const tempPost = {
         id: Date.now(),
         ...formData,
